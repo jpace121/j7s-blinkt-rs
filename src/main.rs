@@ -36,7 +36,7 @@ struct BusPixel {
 
 impl BusPixel {
     pub fn from_pixel(pixel: &Pixel) -> BusPixel {
-        let brightness = 0b11100000 | (((pixel.brightness * 31.0).to_bits() as u8) & 0x1F);
+        let brightness = 0b11100000 | (((pixel.brightness * 31.0) as u8) & 0x1F);
         BusPixel {
             red: pixel.red,
             green: pixel.green,
@@ -120,7 +120,6 @@ impl Blinkt {
     pub fn display(&self) -> Result<(), gpio_cdev::Error> {
         self.start_frame()?;
         for bus_pixel in self.get_bus_pixels().iter() {
-
             self.write_byte(bus_pixel.brightness)?;
             self.write_byte(bus_pixel.blue)?;
             self.write_byte(bus_pixel.green)?;
@@ -181,6 +180,11 @@ fn main() {
     let mut blinkt = Blinkt::new().unwrap();
 
     blinkt.clear().unwrap();
-    blinkt.set_pixel(0, Pixel::new(255, 0, 0, 1.0));
+    blinkt.set_pixel(0, Pixel::new(255, 255, 255, 1.0));
+    blinkt.set_pixel(1, Pixel::new(255, 255, 255, 0.8));
+    blinkt.set_pixel(2, Pixel::new(255, 255, 255, 0.6));
+    blinkt.set_pixel(3, Pixel::new(255, 255, 255, 0.4));
+    blinkt.set_pixel(4, Pixel::new(255, 255, 255, 0.2));
+    blinkt.set_pixel(5, Pixel::new(255, 255, 255, 0.0));
     blinkt.display().unwrap();
 }
